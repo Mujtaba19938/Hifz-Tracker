@@ -17,18 +17,18 @@
       "supportsTablet": true,
       "bundleIdentifier": "app.rork.hifz-tracker-2q6sks0"
     },
-      "android": {
-        "adaptiveIcon": {
-          "foregroundImage": "./assets/images/adaptive-icon.png",
-          "backgroundColor": "#ffffff"
-        },
-        "package": "com.rork.hifztracker",
-        "versionCode": 1,
-        "permissions": [
-          "android.permission.INTERNET",
-          "android.permission.ACCESS_NETWORK_STATE"
-        ]
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
       },
+      "package": "com.rork.hifztracker",
+      "versionCode": 1,
+      "permissions": [
+        "android.permission.INTERNET",
+        "android.permission.ACCESS_NETWORK_STATE"
+      ]
+    },
     "web": {
       "favicon": "./assets/images/favicon.png"
     },
@@ -44,6 +44,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": "https://rork.com/"
+      },
+      "eas": {
+        "projectId": "dc869acc-0f17-4722-ab22-874ac1209fc6"
+      }
     }
   }
 }
