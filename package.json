@@ -3,13 +3,17 @@
     "main": "expo-router/entry",
     "version": "1.0.0",
     "scripts": {
+        "prestart": "node scripts/updateEnv.js",
         "start": "bunx rork start -p jpfq5jtb7wjp3afpkrptx --tunnel",
         "start-web": "bunx rork start -p jpfq5jtb7wjp3afpkrptx --web --tunnel",
         "start-web-dev": "DEBUG=expo* bunx rork start -p jpfq5jtb7wjp3afpkrptx --web --tunnel",
+        "dev": "node scripts/updateEnv.js && npx expo start --clear",
         "lint": "expo lint",
         "build:android": "npx eas-cli build --platform android --profile production",
         "build:android-aab": "npx eas-cli build --platform android --profile production-aab",
-        "build:android-preview": "npx eas-cli build --platform android --profile preview"
+        "build:android-preview": "npx eas-cli build --platform android --profile preview",
+        "update-env": "node scripts/updateEnv.js",
+        "backend": "cd backend && npm start"
     },
     "dependencies": {
         "@expo/vector-icons": "^15.0.2",
