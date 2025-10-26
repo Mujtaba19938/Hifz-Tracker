@@ -54,11 +54,7 @@ async function fetchWithRetry(
     });
     
     clearTimeout(timeoutId);
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-    
+    // Do not throw on non-OK here; let callers read the body and surface a useful message
     return response;
   } catch (error) {
     clearTimeout(timeoutId);

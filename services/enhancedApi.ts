@@ -40,6 +40,32 @@ class EnhancedApiService {
   }
 
   /**
+   * Create an abort signal with timeout that works across RN/web.
+   * Uses AbortSignal.timeout if available, otherwise falls back to AbortController.
+   */
+  private withTimeout(timeoutMs: number): { signal: AbortSignal | undefined; cancel: () => void } {
+    try {
+      // Prefer native AbortSignal.timeout when available
+      const anyAbort: any = (global as any).AbortSignal || (typeof AbortSignal !== 'undefined' ? AbortSignal : undefined);
+      if (anyAbort && typeof anyAbort.timeout === 'function') {
+        return { signal: anyAbort.timeout(timeoutMs), cancel: () => {} };
+      }
+    } catch (_) {}
+
+    // Fallback using AbortController
+    try {
+      const controller = new AbortController();
+      const id = setTimeout(() => {
+        try { controller.abort(); } catch (_) {}
+      }, timeoutMs);
+      return { signal: controller.signal, cancel: () => clearTimeout(id) };
+    } catch (_) {
+      // Last resort: no signal support
+      return { signal: undefined, cancel: () => {} };
+    }
+  }
+
+  /**
    * Detect and set the best backend URL
    */
   async detectAndSetBackendUrl(options: NetworkDetectionOptions = {}): Promise<string | null> {
@@ -119,11 +145,13 @@ class EnhancedApiService {
       const healthUrl = `${this.apiBaseUrl}/health`;
       console.log(`🏥 Checking backend health at: ${healthUrl}`);
       
+      const { signal, cancel } = this.withTimeout(5000);
       const response = await fetch(healthUrl, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json' },
-        signal: AbortSignal.timeout(5000),
+        signal,
       });
+      cancel();
 
       if (response.ok) {
         const data = await response.json();
@@ -171,14 +199,16 @@ class EnhancedApiService {
     console.log(`🌐 Making request to: ${fullUrl}`);
 
     try {
+      const { signal, cancel } = this.withTimeout(10000);
       const response = await fetch(fullUrl, {
         ...options,
         headers: {
           'Content-Type': 'application/json',
           ...options.headers,
         },
-        signal: AbortSignal.timeout(10000), // 10 second timeout
+        signal,
       });
+      cancel();
 
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}: ${response.statusText}`);

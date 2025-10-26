@@ -1,5 +1,15 @@
 import { enhancedApiService, ApiResponse, User, CreateUserData, StudentDoc, HomeworkAssignment, AssignLessonPayload } from './enhancedApi';
 
+// Types for class management
+export interface ClassItem {
+  _id: string;
+  name: string;
+  sections: string[];
+  createdBy: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
 /**
  * Auto-detecting API service that automatically finds and connects to the backend
  * This service extends the enhanced API with all the existing API methods
@@ -133,6 +143,28 @@ class AutoDetectingApiService {
     });
   }
 
+  // ==================== CLASS MANAGEMENT METHODS ====================
+
+  async getClasses(): Promise<ApiResponse<ClassItem[]>> {
+    console.log('🏫 Fetching classes...');
+    return this.makeAuthenticatedRequest<ClassItem[]>(`/classes`);
+  }
+
+  async createClass(payload: { name: string; sections: string[] }): Promise<ApiResponse<ClassItem>> {
+    console.log('🏫 Creating class:', payload.name);
+    return this.makeAuthenticatedRequest<ClassItem>(`/classes`, {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
+  async deleteClass(id: string): Promise<ApiResponse<void>> {
+    console.log('🏫 Deleting class:', id);
+    return this.makeAuthenticatedRequest<void>(`/classes/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
   // ==================== AUTH API METHODS ====================
 
   /**
@@ -145,31 +177,10 @@ class AutoDetectingApiService {
       method: 'POST',
       body: JSON.stringify({ username, password }),
     });
-
     // If login successful, set the token
     if (result.success && result.data?.token) {
       this.setToken(result.data.token);
     }
-
-    return result;
-  }
-
-  /**
-   * Student login
-   */
-  async studentLogin(studentId: string, password?: string): Promise<ApiResponse<{ student: User; token: string }>> {
-    console.log('👨‍🎓 Student login attempt:', { studentId });
-    
-    const result = await this.makeAuthenticatedRequest<{ student: User; token: string }>('/auth/student-login', {
-      method: 'POST',
-      body: JSON.stringify({ studentId, password }),
-    });
-
-    // If login successful, set the token
-    if (result.success && result.data?.token) {
-      this.setToken(result.data.token);
-    }
-
     return result;
   }
 
@@ -231,7 +242,7 @@ class AutoDetectingApiService {
    * Get my assignments (for students)
    */
   async getMyAssignments(
-    options: { page?: number; limit?: number; status?: 'assigned' | 'completed' | 'overdue'; type?: string } = {}
+    options: { page?: number; limit?: number; status?: 'assigned' | 'completed' | 'overdue'; type?: string; studentId?: string } = {}
   ): Promise<ApiResponse<{ assignments: HomeworkAssignment[]; pagination: { current: number; pages: number; total: number } }>> {
     console.log('📚 Fetching my assignments:', options);
     
@@ -240,6 +251,7 @@ class AutoDetectingApiService {
     if (options.limit) params.set('limit', String(options.limit));
     if (options.status) params.set('status', options.status);
     if (options.type) params.set('type', options.type);
+    if (options.studentId) params.set('studentId', options.studentId);
     
     return this.makeAuthenticatedRequest<{ assignments: HomeworkAssignment[]; pagination: { current: number; pages: number; total: number } }>(
       `/homework/student-assignments?${params.toString()}`

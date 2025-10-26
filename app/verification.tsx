@@ -40,7 +40,7 @@ export default function VerificationScreen() {
         router.replace('/new-password' as any);
       } else {
         // Regular sign-in flow
-        router.replace('/student-selection' as any);
+        router.replace('/(tabs)/class-selection' as any);
       }
     } else {
       setError(result.error || 'Invalid code');

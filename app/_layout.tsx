@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Stack } from "expo-router";
+import { Stack, Tabs } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -20,10 +20,9 @@ function RootLayoutNav() {
       <Stack.Screen name="verification" options={{ headerShown: false }} />
       <Stack.Screen name="new-password" options={{ headerShown: false }} />
       <Stack.Screen name="register-masjid" options={{ headerShown: false }} />
-      <Stack.Screen name="student-selection" options={{ headerShown: false }} />
-      <Stack.Screen name="lesson" options={{ headerShown: false }} />
-      <Stack.Screen name="activity" options={{ headerShown: false }} />
-      <Stack.Screen name="homework" options={{ headerShown: false }} />
+      <Stack.Screen name="attendance" options={{ headerShown: false }} />
+      <Stack.Screen name="admin-dashboard" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
     </Stack>
   );
 }

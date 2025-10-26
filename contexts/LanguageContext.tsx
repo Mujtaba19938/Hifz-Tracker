@@ -36,6 +36,15 @@ export const [LanguageProvider, useLanguage] = createContextHook(() => {
     }
   }, [language]);
 
+  const setLanguageTo = useCallback(async (lang: Language) => {
+    setLanguage(lang);
+    try {
+      await AsyncStorage.setItem(LANGUAGE_KEY, lang);
+    } catch (error) {
+      console.error('Failed to save language:', error);
+    }
+  }, []);
+
   const t = translations[language];
   const isRTL = language === 'ur';
 
@@ -43,10 +52,11 @@ export const [LanguageProvider, useLanguage] = createContextHook(() => {
     () => ({
       language,
       toggleLanguage,
+      setLanguageTo,
       t,
       isRTL,
       isLoading,
     }),
-    [language, toggleLanguage, t, isRTL, isLoading]
+    [language, toggleLanguage, setLanguageTo, t, isRTL, isLoading]
   );
 });

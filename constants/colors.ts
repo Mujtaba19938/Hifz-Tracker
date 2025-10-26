@@ -12,6 +12,7 @@ export default {
     border: '#E0E0E0',
     error: '#FF3B30',
     success: '#34C759',
+    warning: '#FF9800',
     shadow: 'rgba(0, 0, 0, 0.1)',
     overlay: 'rgba(0, 0, 0, 0.5)',
   };

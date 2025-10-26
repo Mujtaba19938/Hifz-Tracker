@@ -29,7 +29,8 @@ interface AdminData {
 export default function RegisterMasjidScreen() {
   const router = useRouter();
   const { register, isLoading } = useAuth();
-  const { t, isRTL, toggleLanguage, language } = useLanguage();
+  const { t, isRTL, language, setLanguageTo } = useLanguage();
+  const [showLangMenu, setShowLangMenu] = useState(false);
   
   const [currentStep, setCurrentStep] = useState(1);
   const [error, setError] = useState('');
@@ -293,13 +294,24 @@ export default function RegisterMasjidScreen() {
                 <ChevronLeft size={24} color={colors.white} />
               </TouchableOpacity>
 
-              <TouchableOpacity
-                style={styles.languageButton}
-                onPress={toggleLanguage}
-              >
-                <Globe size={24} color={colors.white} />
-                <Text style={styles.languageText}>{language === 'en' ? 'اردو' : 'English'}</Text>
-              </TouchableOpacity>
+              <View>
+                <TouchableOpacity
+                  style={styles.languageButton}
+                  onPress={() => setShowLangMenu(v => !v)}
+                >
+                  <Globe size={24} color={colors.white} />
+                </TouchableOpacity>
+                {showLangMenu && (
+                  <View style={styles.languageMenu}>
+                    <TouchableOpacity style={styles.languageMenuItem} onPress={() => { setLanguageTo('en' as any); setShowLangMenu(false); }}>
+                      <Text style={styles.languageMenuText}>English</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.languageMenuItem} onPress={() => { setLanguageTo('ur' as any); setShowLangMenu(false); }}>
+                      <Text style={styles.languageMenuText}>اردو</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </View>
             </View>
 
             <View style={styles.logoContainer}>
@@ -349,12 +361,27 @@ const styles = StyleSheet.create({
   languageButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    padding: 8,
   },
-  languageText: {
+  languageMenu: {
+    position: 'absolute' as const,
+    top: 36,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.6)',
+    borderRadius: 8,
+    overflow: 'hidden',
+    zIndex: 20,
+  },
+  languageMenuItem: {
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    minWidth: 120,
+  },
+  languageMenuText: {
     color: colors.white,
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '600',
+    textAlign: 'right' as const,
   },
   logoContainer: {
     alignItems: 'center',

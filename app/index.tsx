@@ -9,7 +9,7 @@ import { useAuth } from '@/contexts/AuthContext';
 
 export default function SplashScreen() {
   const router = useRouter();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
 
@@ -29,15 +29,25 @@ export default function SplashScreen() {
     ]).start();
 
     const timer = setTimeout(() => {
+      console.log('SplashScreen: isAuthenticated =', isAuthenticated);
+      console.log('SplashScreen: user =', user);
+      console.log('SplashScreen: user?.role =', user?.role);
       if (isAuthenticated) {
-        router.replace('/student-selection' as any);
+        if (user?.role === 'admin') {
+          console.log('Navigating to admin-dashboard');
+          router.replace('/admin-dashboard' as any);
+        } else {
+          console.log('Navigating to class-selection');
+          router.replace('/(tabs)/class-selection' as any);
+        }
       } else {
+        console.log('Navigating to sign-in');
         router.replace('/sign-in' as any);
       }
     }, 2500);
 
     return () => clearTimeout(timer);
-  }, [isAuthenticated, router, fadeAnim, scaleAnim]);
+  }, [isAuthenticated, user, router, fadeAnim, scaleAnim]);
 
   return (
     <View style={styles.container}>

@@ -2,7 +2,7 @@
   "expo": {
     "name": "Hifz Tracker",
     "slug": "hifz-tracker-2q6sks0",
-    "version": "1.0.0",
+    "version": "1.2.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "myapp",
@@ -15,7 +15,10 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "app.rork.hifz-tracker-2q6sks0"
+      "bundleIdentifier": "app.rork.hifz-tracker-2q6sks0",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -23,7 +26,7 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.rork.hifztracker",
-      "versionCode": 1,
+        "versionCode": 3,
       "permissions": [
         "android.permission.INTERNET",
         "android.permission.ACCESS_NETWORK_STATE"
